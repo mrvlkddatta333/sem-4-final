@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Viva — Jasti Kesava Datta | RA2432014010026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --srm-blue: #003366;
+    --srm-gold: #C8A951;
+    --accent: #2563EB;
+    --bg-light: #F8FAFC;
+    --text-primary: #1E293B;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
+    --card-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    --border: #E2E8F0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',-apple-system,sans-serif; background:#0F172A; }
+
+  /* ── SLIDE — scrollable inner area ── */
+  .slide {
+    display:none; width:100vw; min-height:100vh;
+    position:relative; background:#fff;
+    flex-direction:column;
+  }
+  .slide.active { display:flex; }
+  .slide::before {
+    content:''; position:sticky; top:0; left:0; right:0; height:4px; z-index:5; flex-shrink:0;
+    background:linear-gradient(90deg,var(--srm-blue),var(--srm-gold),var(--srm-blue));
+    display:block; width:100%;
+  }
+  .slide-inner {
+    flex:1; padding:36px 60px 60px; overflow-y:auto; overflow-x:hidden;
+  }
+
+  /* ── Footer bar ── */
+  .slide-foot-bar {
+    flex-shrink:0; display:flex; justify-content:space-between; align-items:center;
+    padding:12px 60px; border-top:1px solid var(--border); background:#FAFBFC;
+    font-size:11px; color:var(--text-muted); letter-spacing:0.4px;
+    min-height:42px; gap:40px;
+  }
+  .slide-foot-bar .foot-left {
+    flex:1; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .slide-foot-bar .foot-right {
+    flex-shrink:0; text-align:right; white-space:nowrap;
+    font-weight:600; color:#64748B; letter-spacing:1px;
+  }
+
+  /* ── Typography ── */
+  h1 { font-size:2.1em; color:var(--srm-blue); font-weight:800; line-height:1.25; }
+  h2 { font-size:1.45em; color:var(--srm-blue); font-weight:700; margin-bottom:18px;
+       padding-bottom:8px; border-bottom:3px solid var(--srm-gold); display:inline-block; }
+  h3 { font-size:0.98em; color:var(--accent); font-weight:700; margin-bottom:8px; }
+  p  { font-size:0.9em; color:var(--text-secondary); line-height:1.65; }
+
+  .highlight { color:var(--accent); font-weight:600; }
+  .tag { display:inline-block; background:#EFF6FF; color:var(--accent); padding:3px 12px;
+         border-radius:5px; font-size:0.75em; margin:2px; font-weight:600; border:1px solid #DBEAFE; }
+  .tag.gold  { background:#FFFBEB; color:#92400E; border-color:#FDE68A; }
+  .tag.green { background:#F0FDF4; color:#166534; border-color:#BBF7D0; }
+  .tag.red   { background:#FEF2F2; color:#991B1B; border-color:#FECACA; }
+
+  ul { list-style:none; padding-left:0; }
+  ul li { padding:4px 0 4px 20px; position:relative; font-size:0.88em; line-height:1.55; color:var(--text-secondary); }
+  ul li::before { content:''; position:absolute; left:0; top:12px; width:5px; height:5px; border-radius:50%; background:var(--srm-gold); }
+  ul li strong { color:var(--text-primary); }
+
+  .two-col   { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
+
+  .card { background:#fff; border-radius:10px; padding:18px; box-shadow:var(--card-shadow);
+          border:1px solid var(--border); border-top:3px solid var(--accent); }
+  .card.green  { border-top-color:#16A34A; }
+  .card.orange { border-top-color:#EA580C; }
+  .card.purple { border-top-color:#9333EA; }
+  .card.gold   { border-top-color:var(--srm-gold); }
+  .card.red    { border-top-color:#DC2626; }
+  .card h3 { margin-bottom:6px; }
+  .card ul li { font-size:0.84em; padding:3px 0 3px 18px; }
+
+  table { width:100%; border-collapse:collapse; font-size:0.84em; }
+  th { background:var(--srm-blue); color:#fff; padding:8px 12px; text-align:left;
+       font-weight:600; font-size:0.82em; letter-spacing:0.4px; text-transform:uppercase; }
+  td { padding:7px 12px; border-bottom:1px solid var(--border); color:var(--text-secondary); }
+  tr:nth-child(even) { background:#F8FAFC; }
+
+  .arch-box { background:var(--bg-light); border:1.5px solid var(--border); border-radius:8px;
+              padding:12px 20px; text-align:center; }
+  .arch-title { font-weight:700; color:var(--srm-blue); font-size:0.95em; }
+  .arch-desc  { color:var(--text-muted); font-size:0.78em; margin-top:2px; }
+  .arch-arrow { text-align:center; font-size:1.2em; color:var(--srm-gold); margin:3px 0; font-weight:700; }
+
+  .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .metric { text-align:center; background:#fff; padding:18px 12px; border-radius:10px;
+            box-shadow:var(--card-shadow); border:1px solid var(--border); }
+  .metric .value { font-size:2em; font-weight:800; color:var(--srm-blue); }
+  .metric .label { font-size:0.78em; color:var(--text-muted); margin-top:3px; }
+
+  .flow-step { display:flex; align-items:center; gap:8px; margin:4px 0; }
+  .flow-num  { width:24px; height:24px; border-radius:50%; background:var(--accent); color:#fff;
+               display:flex; align-items:center; justify-content:center; font-size:0.72em; font-weight:700; flex-shrink:0; }
+  .flow-text { font-size:0.85em; color:var(--text-secondary); font-weight:500; }
+  .flow-connector { width:24px; display:flex; justify-content:center; }
+  .flow-connector::after { content:''; width:2px; height:8px; background:var(--border); display:block; }
+
+  .code-block { background:#1E293B; color:#E2E8F0; padding:14px 18px; border-radius:8px;
+                font-family:'Fira Code',monospace; font-size:0.78em; line-height:1.65; overflow-x:auto; }
+  .code-block .kw  { color:#7DD3FC; }
+  .code-block .str { color:#86EFAC; }
+  .code-block .cm  { color:#64748B; }
+
+  /* ── Screenshots — NEVER cut ── */
+  .screenshot { border-radius:6px; border:1px solid var(--border); box-shadow:0 2px 10px rgba(0,0,0,0.07);
+                width:100%; height:auto; display:block; }
+  .screenshot-label { font-size:0.72em; color:var(--text-muted); text-align:center; margin-top:5px; font-style:italic; }
+  .ss-block { margin-bottom:16px; }
+
+  /* ── Title Slide ── */
+  .title-slide { background:linear-gradient(160deg,#fff 0%,#F0F4FF 50%,#FEFCE8 100%);
+                 text-align:center; align-items:center; justify-content:center; }
+  .title-slide .slide-inner { display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .university-name { font-size:1.1em; color:var(--srm-blue); font-weight:700; letter-spacing:2px; text-transform:uppercase; }
+  .dept { font-size:0.85em; color:var(--text-secondary); margin-top:3px; }
+  .title-divider { width:100px; height:3px; margin:14px auto; background:linear-gradient(90deg,var(--srm-blue),var(--srm-gold)); border-radius:2px; }
+  .student-block { margin-top:18px; line-height:1.85; font-size:0.92em; color:var(--text-secondary); }
+  .student-block strong { color:var(--text-primary); }
+
+  /* ── Thank You ── */
+  .thank-slide {
+    background: #FFFDF7;
+    text-align:center; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .thank-slide::before { background:linear-gradient(90deg,var(--srm-gold),var(--srm-blue),var(--srm-gold)); }
+  .thank-slide .slide-inner { display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; z-index:1; }
+  /* decorative circles */
+  .thank-slide .deco-circle {
+    position:absolute; border-radius:50%; opacity:0.06; z-index:0;
+  }
+  .thank-slide h1 { color:var(--srm-blue); font-size:3.4em; letter-spacing:-1px; }
+  .thank-slide .name { color:var(--srm-blue); font-size:1.3em; font-weight:800; letter-spacing:1px; }
+  .thank-slide .info { color:var(--text-secondary); font-size:0.9em; }
+  .thank-slide .tag { background:#EFF6FF; color:var(--accent); border-color:#DBEAFE; }
+  .thank-slide .ty-divider {
+    width:80px; height:3px; border-radius:2px; margin:16px auto;
+    background:linear-gradient(90deg,var(--srm-blue),var(--srm-gold));
+  }
+  .thank-slide .ty-quote {
+    margin-top:28px; font-size:0.82em; color:var(--text-muted); font-style:italic;
+    padding:10px 24px; border-left:3px solid var(--srm-gold); background:#FEFCE8; border-radius:0 6px 6px 0;
+  }
+
+  /* ── Nav Bar ── */
+  .nav {
+    position:fixed; z-index:200;
+    display:flex; gap:5px; align-items:center;
+    background:rgba(15,23,42,0.94); padding:5px 8px; border-radius:10px;
+    backdrop-filter:blur(10px); box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    transition:all 0.3s ease;
+  }
+  .nav.pos-bottom { bottom:14px; left:50%; transform:translateX(-50%); top:auto; right:auto; }
+  .nav.pos-top    { top:14px; left:50%; transform:translateX(-50%); bottom:auto; right:auto; }
+  .nav.pos-hidden { bottom:-60px; left:50%; transform:translateX(-50%); pointer-events:none; opacity:0; }
+
+  .nav button, .nav .nav-btn {
+    padding:6px 16px; border:none; border-radius:5px; cursor:pointer;
+    font-size:11px; font-weight:600; font-family:'Inter',sans-serif; transition:all 0.15s;
+  }
+  .nav .prev { background:#334155; color:#CBD5E1; }
+  .nav .prev:hover { background:#475569; }
+  .nav .next { background:var(--srm-gold); color:var(--srm-blue); }
+  .nav .next:hover { background:#D4B45C; }
+  .nav .counter { color:#64748B; font-size:11px; padding:0 6px; white-space:nowrap; }
+  .nav .nav-btn { background:#1E293B; color:#94A3B8; font-size:13px; padding:5px 10px; }
+  .nav .nav-btn:hover { background:#334155; color:#E2E8F0; }
+  .nav .sep { width:1px; height:20px; background:#334155; margin:0 2px; }
+
+  /* ── Floating show-nav button (when nav hidden) ── */
+  .show-nav-btn {
+    position:fixed; bottom:14px; right:14px; z-index:200;
+    width:40px; height:40px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--srm-gold); color:var(--srm-blue); font-size:16px; font-weight:700;
+    box-shadow:0 4px 16px rgba(0,0,0,0.3); transition:all 0.2s;
+    display:none; align-items:center; justify-content:center;
+  }
+  .show-nav-btn.visible { display:flex; }
+  .show-nav-btn:hover { transform:scale(1.1); }
+
+  /* ── Slide Panel (sidebar) ── */
+  .slide-panel-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:300;
+    opacity:0; pointer-events:none; transition:opacity 0.25s;
+  }
+  .slide-panel-overlay.open { opacity:1; pointer-events:auto; }
+
+  .slide-panel {
+    position:fixed; top:0; left:-320px; width:300px; height:100vh; z-index:310;
+    background:#0F172A; overflow-y:auto; transition:left 0.3s ease;
+    box-shadow:4px 0 24px rgba(0,0,0,0.4); padding:0;
+  }
+  .slide-panel.open { left:0; }
+
+  .slide-panel-header {
+    padding:16px 18px; background:#1E293B; display:flex; justify-content:space-between; align-items:center;
+    position:sticky; top:0; z-index:1;
+  }
+  .slide-panel-header span { color:#E2E8F0; font-weight:700; font-size:13px; letter-spacing:0.5px; }
+  .slide-panel-close {
+    background:none; border:none; color:#94A3B8; font-size:20px; cursor:pointer; padding:0 4px;
+    transition:color 0.15s;
+  }
+  .slide-panel-close:hover { color:#fff; }
+
+  .slide-panel-list { padding:10px 12px; }
+  .slide-panel-item {
+    display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px;
+    cursor:pointer; transition:all 0.15s; margin-bottom:3px;
+  }
+  .slide-panel-item:hover { background:#1E293B; }
+  .slide-panel-item.active { background:#1E3A5F; border-left:3px solid var(--srm-gold); }
+  .slide-panel-item .sp-num {
+    width:26px; height:26px; border-radius:6px; background:#1E293B;
+    color:#94A3B8; display:flex; align-items:center; justify-content:center;
+    font-size:10px; font-weight:700; flex-shrink:0;
+  }
+  .slide-panel-item.active .sp-num { background:var(--srm-gold); color:var(--srm-blue); }
+  .slide-panel-item .sp-title { color:#CBD5E1; font-size:12px; font-weight:500; line-height:1.3; }
+  .slide-panel-item.active .sp-title { color:#fff; font-weight:600; }
+
+  @media print { .nav,.slide-panel,.slide-panel-overlay,.show-nav-btn{display:none!important;} .slide{display:flex!important;page-break-after:always;} }
+</style>
+</head>
+<body>
+
+<!-- ══ SLIDE 1 — TITLE ══ -->
+<div class="slide title-slide active" id="slide1">
+  <div class="slide-inner">
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/SRM_Institute_of_Science_and_Technology_Logo.svg/1280px-SRM_Institute_of_Science_and_Technology_Logo.svg.png" alt="SRM Logo" style="width:140px; margin-bottom:16px;">
+    <div class="university-name">SRM Institute of Science and Technology</div>
+    <div class="dept">Faculty of Science and Humanities &nbsp;|&nbsp; Department of Computer Applications</div>
+    <div class="dept" style="font-size:0.78em; color:var(--text-muted);">Kattankulathur – 603 203, Chennai, Tamil Nadu</div>
+    <div class="title-divider"></div>
+    <h1 style="font-size:1.65em; max-width:780px;">Design and Development of Functional Modules<br>for a Learning Management System</h1>
+    <div class="title-divider" style="width:70px; height:2px; margin:12px auto;"></div>
+    <div class="student-block">
+      <strong style="font-size:1.1em;">JASTI KESAVA DATTA</strong><br>
+      Reg. No: <strong>RA2432014010026</strong><br>
+      M.Sc. Applied Data Science (2024–2026)<br><br>
+      <span style="font-size:0.84em; color:var(--text-muted);">Under the guidance of</span><br>
+      <strong>Dr. P. CHANTHINI</strong> <span style="font-size:0.84em;">M.Sc., M.Phil., Ph.D.</span><br>
+      <span style="font-size:0.84em;">Assistant Professor, Department of Computer Applications</span>
+    </div>
+    <div style="margin-top:18px; font-size:0.82em; color:var(--text-muted); letter-spacing:1px;">APRIL 2026</div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026</span><span class="foot-right">1 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 2 — ABSTRACT ══ -->
+<div class="slide" id="slide2">
+  <div class="slide-inner">
+    <h2>Abstract</h2>
+    <p style="text-align:justify; margin-bottom:14px;">
+      Learning Management Systems are essential platforms in educational institutions for managing academic operations.
+      As these systems grow in complexity, monolithic architectures become bottlenecks in scalability and maintainability.
+    </p>
+    <p style="text-align:justify; margin-bottom:14px;">
+      This project focuses on redesigning <strong>three critical modules</strong> of an existing LMS at
+      <span class="highlight">Codegnan IT Solutions Pvt Ltd</span>, extracting them from the monolithic backend
+      and redeveloping them as <strong>independent microservices</strong>:
+    </p>
+    <div class="three-col" style="margin:14px 0;">
+      <div class="card" style="padding:14px;">
+        <h3 style="font-size:0.9em;">📝 Exam Examiner Service</h3>
+        <p style="font-size:0.8em;">Exam creation, paper generation, WhatsApp notifications</p>
+      </div>
+      <div class="card green" style="padding:14px;">
+        <h3 style="font-size:0.9em;">📊 Exam Reports Service</h3>
+        <p style="font-size:0.8em;">Analytics, CQRS pattern, multi-role reporting</p>
+      </div>
+      <div class="card orange" style="padding:14px;">
+        <h3 style="font-size:0.9em;">📄 Parent Reports Service</h3>
+        <p style="font-size:0.8em;">PDF generation, S3 upload, WhatsApp distribution</p>
+      </div>
+    </div>
+    <p style="text-align:justify; font-size:0.85em; color:var(--text-muted);">
+      Built using Python Flask, MongoDB, Redis, Celery, and AWS S3. Migration followed the Strangler Fig Pattern
+      for zero-downtime transition. Project period: December 2025 – March 2026.
+    </p>
+    <div style="margin-top:14px;">
+      <span class="tag">Microservices</span><span class="tag">Flask</span><span class="tag">MongoDB</span>
+      <span class="tag">CQRS</span><span class="tag gold">Celery</span><span class="tag gold">Redis</span>
+      <span class="tag green">AWS S3</span><span class="tag green">WhatsApp API</span><span class="tag">Pydantic v2</span>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">2 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 3 — PROBLEM & OBJECTIVES ══ -->
+<div class="slide" id="slide3">
+  <div class="slide-inner">
+    <h2>Problem Statement & Objectives</h2>
+    <div class="two-col">
+      <div>
+        <div class="card red" style="margin-bottom:14px;">
+          <h3 style="color:#DC2626;">⚠ Problems with Existing Monolith</h3>
+          <ul>
+            <li><strong>Single deployment unit</strong> — 80+ endpoints in one Flask app</li>
+            <li><strong>Shared resource pool</strong> — MongoDB pool exhausted during peak</li>
+            <li><strong>No fault isolation</strong> — one crash takes down all modules</li>
+            <li><strong>90+ dependencies</strong> installed for every module</li>
+            <li><strong>No independent scaling</strong> — entire app scales uniformly</li>
+          </ul>
+        </div>
+        <div style="background:#FEF2F2; border-radius:8px; padding:12px 16px; font-size:0.82em; color:#991B1B;">
+          <strong>Impact:</strong> During exam generation (500+ WhatsApp notifications), connection pool exhaustion caused timeouts for unrelated operations.
+        </div>
+      </div>
+      <div class="card green">
+        <h3 style="color:#16A34A;">🎯 Project Objectives</h3>
+        <ul>
+          <li>Extract <strong>3 compute-intensive modules</strong> as independent microservices</li>
+          <li>Implement <strong>clean layered architecture</strong> with separation of concerns</li>
+          <li>Apply <strong>Pydantic v2 validation</strong> and <strong>JWT-based RBAC</strong></li>
+          <li>Enable <strong>independent deployment</strong> and targeted scaling</li>
+          <li>Achieve <strong>zero-downtime migration</strong> using Strangler Fig pattern</li>
+          <li>Implement <strong>async processing</strong> for long-running operations</li>
+          <li>Deploy each service with its own <strong>health monitoring</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">3 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 4 — SCOPE ══ -->
+<div class="slide" id="slide4">
+  <div class="slide-inner">
+    <h2>Scope of the Project</h2>
+    <div class="three-col">
+      <div class="card" style="display:flex; flex-direction:column;">
+        <h3>📝 Exam Examiner Service</h3>
+        <ul>
+          <li>Exam paper generation — MCQ, Code, Query across <strong>14 subjects</strong></li>
+          <li><strong>5-layer validation</strong> system</li>
+          <li>WhatsApp notifications to <strong>500+ students</strong></li>
+          <li>Webhook delivery tracking</li>
+          <li>Database-driven enum system</li>
+          <li>Rate-limited API calls</li>
+        </ul>
+        <div style="margin-top:auto; padding-top:10px;"><span class="tag">Port 6003</span><span class="tag">4 Endpoints</span></div>
+      </div>
+      <div class="card green" style="display:flex; flex-direction:column;">
+        <h3 style="color:#16A34A;">📊 Exam Reports Service</h3>
+        <ul>
+          <li><strong>CQRS</strong> read-only operations</li>
+          <li><strong>4 user roles</strong> — Student, Examiner, Mentor, Admin</li>
+          <li>Redis caching with <strong>1-hour TTL</strong></li>
+          <li>Search, filter, sort capabilities</li>
+          <li>Correct source code for wrong answers</li>
+          <li>APScheduler automated stats</li>
+        </ul>
+        <div style="margin-top:auto; padding-top:10px;"><span class="tag green">Port 6005</span><span class="tag green">10 Endpoints</span></div>
+      </div>
+      <div class="card orange" style="display:flex; flex-direction:column;">
+        <h3 style="color:#EA580C;">📄 Parent Reports Service</h3>
+        <ul>
+          <li>PDF generation — <strong>ReportLab</strong></li>
+          <li>AWS S3 upload with public URLs</li>
+          <li>WhatsApp distribution via ChatRace</li>
+          <li><strong>Celery + Redis</strong> async processing</li>
+          <li>Hierarchical status tracking</li>
+          <li>3 processing scenarios</li>
+        </ul>
+        <div style="margin-top:auto; padding-top:10px;"><span class="tag gold">Port 6006</span><span class="tag gold">6 Endpoints</span></div>
+      </div>
+    </div>
+    <div style="margin-top:16px; text-align:center;">
+      <div style="display:inline-flex; gap:18px; background:var(--bg-light); padding:10px 24px; border-radius:8px; border:1px solid var(--border);">
+        <div><strong style="color:var(--srm-blue); font-size:1.3em;">20</strong><br><span style="font-size:0.75em; color:var(--text-muted);">Total Endpoints</span></div>
+        <div style="width:1px; background:var(--border);"></div>
+        <div><strong style="color:var(--srm-blue); font-size:1.3em;">4</strong><br><span style="font-size:0.75em; color:var(--text-muted);">User Roles</span></div>
+        <div style="width:1px; background:var(--border);"></div>
+        <div><strong style="color:var(--srm-blue); font-size:1.3em;">14</strong><br><span style="font-size:0.75em; color:var(--text-muted);">Subjects</span></div>
+        <div style="width:1px; background:var(--border);"></div>
+        <div><strong style="color:var(--srm-blue); font-size:1.3em;">22</strong><br><span style="font-size:0.75em; color:var(--text-muted);">Collections</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">4 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 5 — TECH STACK ══ -->
+<div class="slide" id="slide5">
+  <div class="slide-inner">
+    <h2>Technology Stack</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <table>
+          <tr><th style="width:35%;">Category</th><th>Technology</th></tr>
+          <tr><td><strong>Language</strong></td><td>Python 3.11+</td></tr>
+          <tr><td><strong>Web Framework</strong></td><td>Flask 3.1.1 + Flask-RESTful</td></tr>
+          <tr><td><strong>Database</strong></td><td>MongoDB 5.0+ (Atlas)</td></tr>
+          <tr><td><strong>Caching / Broker</strong></td><td>Redis 6.0+</td></tr>
+          <tr><td><strong>Task Queue</strong></td><td>Celery 5.3.4</td></tr>
+          <tr><td><strong>Validation</strong></td><td>Pydantic v2</td></tr>
+          <tr><td><strong>Authentication</strong></td><td>Flask-JWT-Extended (JWT + RBAC)</td></tr>
+          <tr><td><strong>PDF Generation</strong></td><td>ReportLab 4.0.4 + PyPDF2</td></tr>
+          <tr><td><strong>Cloud Storage</strong></td><td>AWS S3 (Boto3)</td></tr>
+          <tr><td><strong>Notifications</strong></td><td>ChatRace WhatsApp API</td></tr>
+          <tr><td><strong>Scheduling</strong></td><td>APScheduler 3.10.4</td></tr>
+          <tr><td><strong>Deployment</strong></td><td>Docker, Gunicorn, AWS EB</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:12px;">
+          <h3>SDG Alignment</h3>
+          <ul>
+            <li><strong>SDG 4 — Quality Education:</strong> Automates exam administration, generates analytics, distributes reports to parents</li>
+            <li><strong>SDG 9 — Industry & Innovation:</strong> Migration from monolith to scalable microservices using modern patterns</li>
+          </ul>
+        </div>
+        <div class="card gold">
+          <h3 style="color:#92400E;">Literature Foundation</h3>
+          <ul>
+            <li>Fowler & Lewis (2014) — Microservices principles</li>
+            <li>Newman (2019) — Monolith to Microservices</li>
+            <li>Evans (2003) — Domain-Driven Design</li>
+            <li>Young — CQRS Pattern</li>
+            <li>Fowler (2004) — Strangler Fig Pattern</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">5 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 6 — OVERALL ARCHITECTURE ══ -->
+<div class="slide" id="slide6">
+  <div class="slide-inner">
+    <h2>Overall System Architecture</h2>
+    <div style="text-align:center; margin-top:6px;">
+      <div class="arch-box" style="display:inline-block; padding:10px 44px; background:#EFF6FF; border-color:var(--accent);">
+        <div class="arch-title">🖥️ LMS Frontend (React)</div>
+        <div class="arch-desc">Consumes REST APIs from all three services</div>
+      </div>
+      <div class="arch-arrow">▼ &emsp; ▼ &emsp; ▼</div>
+      <div style="display:flex; justify-content:center; gap:14px; margin:8px 0;">
+        <div class="arch-box" style="flex:1; max-width:240px; border-color:var(--accent); background:#EFF6FF;">
+          <div class="arch-title" style="color:var(--accent);">Exam Examiner</div>
+          <div class="arch-desc">Port 6003 | 4 APIs</div>
+          <div style="margin-top:4px;"><span class="tag" style="font-size:0.68em;">Layered Architecture</span></div>
+        </div>
+        <div class="arch-box" style="flex:1; max-width:240px; border-color:#16A34A; background:#F0FDF4;">
+          <div class="arch-title" style="color:#16A34A;">Exam Reports</div>
+          <div class="arch-desc">Port 6005 | 10 APIs</div>
+          <div style="margin-top:4px;"><span class="tag green" style="font-size:0.68em;">CQRS Pattern</span></div>
+        </div>
+        <div class="arch-box" style="flex:1; max-width:240px; border-color:#EA580C; background:#FFF7ED;">
+          <div class="arch-title" style="color:#EA580C;">Parent Reports</div>
+          <div class="arch-desc">Port 6006 | 6 APIs</div>
+          <div style="margin-top:4px;"><span class="tag gold" style="font-size:0.68em;">DDD + Celery Async</span></div>
+        </div>
+      </div>
+      <div class="arch-arrow">▼ &emsp; ▼ &emsp; ▼</div>
+      <div style="display:flex; justify-content:center; gap:12px; margin:8px 0;">
+        <div class="arch-box" style="flex:1; max-width:170px; background:#FFFBEB; border-color:var(--srm-gold);">
+          <div class="arch-title" style="font-size:0.85em;">🗄️ MongoDB Atlas</div><div class="arch-desc">Shared Cluster</div>
+        </div>
+        <div class="arch-box" style="flex:1; max-width:170px; background:#FEF2F2; border-color:#DC2626;">
+          <div class="arch-title" style="font-size:0.85em;">⚡ Redis</div><div class="arch-desc">Cache + Broker</div>
+        </div>
+        <div class="arch-box" style="flex:1; max-width:170px; background:#F0FDF4; border-color:#16A34A;">
+          <div class="arch-title" style="font-size:0.85em;">☁️ AWS S3</div><div class="arch-desc">PDF Storage</div>
+        </div>
+        <div class="arch-box" style="flex:1; max-width:170px; background:#F5F3FF; border-color:#9333EA;">
+          <div class="arch-title" style="font-size:0.85em;">💬 ChatRace</div><div class="arch-desc">WhatsApp API</div>
+        </div>
+      </div>
+      <div style="margin-top:14px; display:inline-flex; align-items:center; gap:10px; background:#FFFBEB; padding:8px 20px; border-radius:8px; border:1px solid #FDE68A;">
+        <span style="font-size:1.1em;">🌿</span>
+        <span style="font-size:0.82em; color:#92400E; font-weight:500;">Strangler Fig Migration — Monolith routes commented out after microservice deployment</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">6 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 7 — LAYERED ARCHITECTURE ══ -->
+<div class="slide" id="slide7">
+  <div class="slide-inner">
+    <h2>Layered Architecture & Design Patterns</h2>
+    <div class="two-col" style="gap:30px;">
+      <div>
+        <div style="max-width:400px; margin:0 auto;">
+          <div class="arch-box" style="background:#EFF6FF; border-color:var(--accent);">
+            <div class="arch-title">API Layer</div><div class="arch-desc">HTTP handling | Pydantic validation | JWT auth | Error responses</div>
+          </div>
+          <div class="arch-arrow">▼</div>
+          <div class="arch-box" style="background:#F0FDF4; border-color:#16A34A;">
+            <div class="arch-title">Service Layer</div><div class="arch-desc">Business logic | Orchestration | Domain rules | Workflows</div>
+          </div>
+          <div class="arch-arrow">▼</div>
+          <div class="arch-box" style="background:#FFFBEB; border-color:var(--srm-gold);">
+            <div class="arch-title">Repository Layer</div><div class="arch-desc">MongoDB queries | Aggregation pipelines | Data mapping</div>
+          </div>
+          <div class="arch-arrow">▼</div>
+          <div class="arch-box" style="background:#F5F3FF; border-color:#9333EA;">
+            <div class="arch-title">Integration Layer</div><div class="arch-desc">WhatsApp API | AWS S3 | Redis cache | External services</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:12px;">
+          <h3>Strict Layer Rules</h3>
+          <ul>
+            <li><strong>API:</strong> No business logic, no DB access</li>
+            <li><strong>Service:</strong> No HTTP handling, no direct DB queries</li>
+            <li><strong>Repository:</strong> No business decisions — only data access</li>
+            <li><strong>Integration:</strong> External clients with rate limiting</li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3 style="color:#16A34A;">Design Patterns Applied</h3>
+          <ul>
+            <li><strong>CQRS</strong> — Read/write separation (Reports)</li>
+            <li><strong>Strategy</strong> — Exam type handling (Examiner)</li>
+            <li><strong>Factory</strong> — Dynamic repo & document creation</li>
+            <li><strong>Repository</strong> — Abstracted data access</li>
+            <li><strong>Strangler Fig</strong> — Incremental decomposition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">7 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 8 — MODULE 1: EXAM EXAMINER ══ -->
+<div class="slide" id="slide8">
+  <div class="slide-inner">
+    <h2>Module 1: Exam Examiner Service</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <h3>Exam Generation Flow</h3>
+        <div class="flow-step"><div class="flow-num">1</div><div class="flow-text">Examiner sends POST with exam config</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num">2</div><div class="flow-text">5-Layer Validation Pipeline</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num">3</div><div class="flow-text">Fetch questions from subject collections</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num">4</div><div class="flow-text">Build exam document → Store in MongoDB</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num">5</div><div class="flow-text">Async WhatsApp notifications (ThreadPoolExecutor)</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num">6</div><div class="flow-text">Webhook delivery tracking per student</div></div>
+        <h3 style="margin-top:14px;">Question Types</h3>
+        <table style="font-size:0.8em;">
+          <tr><th>Subject Group</th><th>Types</th></tr>
+          <tr><td>C, C++, Java, Python</td><td>MCQ + Code</td></tr>
+          <tr><td>MySQL</td><td>MCQ + Query</td></tr>
+          <tr><td>Aptitude, Flask, ML, DL, etc.</td><td>MCQ only</td></tr>
+        </table>
+        <p style="margin-top:8px; font-size:0.82em;">Scoring: MCQ <strong>1pt</strong> | Code <strong>5/10/15</strong> | Query <strong>5/10/15</strong></p>
+      </div>
+      <div>
+        <h3>5-Layer Validation System</h3>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#EFF6FF; border-color:var(--accent);">
+          <div class="arch-title" style="font-size:0.84em;">Layer 1: Pydantic Schema</div>
+          <div class="arch-desc">Field types, formats, constraints</div>
+        </div>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#F0FDF4; border-color:#16A34A;">
+          <div class="arch-title" style="font-size:0.84em;">Layer 2: Middleware Validation</div>
+          <div class="arch-desc">JSON structure, query params</div>
+        </div>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#FFFBEB; border-color:var(--srm-gold);">
+          <div class="arch-title" style="font-size:0.84em;">Layer 3: Business Logic</div>
+          <div class="arch-desc">Max 60 min, Mon–Sat only, window rules</div>
+        </div>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#FFF7ED; border-color:#EA580C;">
+          <div class="arch-title" style="font-size:0.84em;">Layer 4: MongoDB Schema</div>
+          <div class="arch-desc">11 required fields at DB level</div>
+        </div>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#F5F3FF; border-color:#9333EA;">
+          <div class="arch-title" style="font-size:0.84em;">Layer 5: Custom Validators</div>
+          <div class="arch-desc">Enum validation against DB collections</div>
+        </div>
+        <h3 style="margin-top:12px;">API Endpoints</h3>
+        <table style="font-size:0.78em;">
+          <tr><th>Method</th><th>Endpoint</th><th>Auth</th></tr>
+          <tr><td>GET</td><td>/api/v1.0/examiner/check-exam-status</td><td>Manager</td></tr>
+          <tr><td>POST</td><td>/api/v1.0/examiner/exam-data</td><td>Manager</td></tr>
+          <tr><td>POST</td><td>/api/v1.0/examiner/generate-exam</td><td>Manager</td></tr>
+          <tr><td>POST</td><td>/api/v1.0/examiner/webhook/whatsapp</td><td>Public</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">8 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 9 — EXAMINER SCREENSHOTS ══ -->
+<div class="slide" id="slide9">
+  <div class="slide-inner">
+    <h2>Exam Examiner Service — Screenshots</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Health Check Response</h3>
+          <img src="images/img03_examiner_health.png" class="screenshot" alt="Health Check">
+          <div class="screenshot-label">Fig: Exam Examiner Service — Health Check Endpoint</div>
+        </div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Check Exam Status API</h3>
+          <img src="images/img04_exam_status.png" class="screenshot" alt="Exam Status">
+          <div class="screenshot-label">Fig: Check Exam Status — Paginated Response</div>
+        </div>
+      </div>
+      <div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">WhatsApp Webhook — Delivery Confirmation</h3>
+          <img src="images/img05_webhook.png" class="screenshot" alt="Webhook">
+          <div class="screenshot-label">Fig: WhatsApp Webhook — Delivery Status Update</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">9 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 10 — MODULE 2: EXAM REPORTS ══ -->
+<div class="slide" id="slide10">
+  <div class="slide-inner">
+    <h2>Module 2: Exam Reports Service — CQRS</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <h3>CQRS Data Flow</h3>
+        <div class="flow-step"><div class="flow-num" style="background:#16A34A;">R</div><div class="flow-text">API Request (GET only — all read operations)</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num" style="background:#16A34A;">V</div><div class="flow-text">Pydantic Schema Validation</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num" style="background:#16A34A;">S</div><div class="flow-text">Service Layer (BaseExamService DRY)</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num" style="background:#16A34A;">Q</div><div class="flow-text">Query Repository (MongoDB Aggregation)</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num" style="background:#16A34A;">F</div><div class="flow-text">Formatter → Enum Conversion → Response</div></div>
+        <h3 style="margin-top:14px;">Enum Caching Strategy</h3>
+        <div style="display:flex; align-items:center; gap:6px; margin:6px 0; flex-wrap:wrap;">
+          <div class="arch-box" style="padding:6px 14px; display:inline-block;"><div class="arch-title" style="font-size:0.8em;">Local Cache</div></div>
+          <span style="color:var(--srm-gold); font-weight:700;">→</span>
+          <div class="arch-box" style="padding:6px 14px; display:inline-block; background:#FEF2F2; border-color:#DC2626;"><div class="arch-title" style="font-size:0.8em;">Redis (1hr TTL)</div></div>
+          <span style="color:var(--srm-gold); font-weight:700;">→</span>
+          <div class="arch-box" style="padding:6px 14px; display:inline-block; background:#FFFBEB; border-color:var(--srm-gold);"><div class="arch-title" style="font-size:0.8em;">MongoDB</div></div>
+        </div>
+        <h3 style="margin-top:14px;">Key Capabilities</h3>
+        <ul>
+          <li>Paginated responses with configurable page size</li>
+          <li>Search by name/ID/phone, filter by status, sort by score</li>
+          <li>Correct source code display for wrong answers</li>
+          <li>Auto-submit detection for cron-submitted exams</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Service Hierarchy (4 Roles, 10 APIs)</h3>
+        <div class="code-block" style="font-size:0.75em; line-height:1.8;">
+<span class="cm">BaseExamService</span> <span class="kw">(DRY — shared logic)</span>
+├── <span class="str">Student Services</span>
+│   ├── ExamSummaryService
+│   ├── ExamDetailService
+│   └── ExamReviewService
+├── <span class="str">Examiner Services</span>
+│   ├── ExamDayListService
+│   └── BatchReportsService
+├── <span class="str">Mentor Services</span>
+│   └── MentorExamListService
+└── <span class="str">Admin Services</span>
+    └── AdminStatsService
+        </div>
+        <h3 style="margin-top:14px;">API Endpoints (10)</h3>
+        <table style="font-size:0.76em;">
+          <tr><th>Role</th><th>Endpoint</th></tr>
+          <tr><td>Student</td><td>student-exam-summary, student-exam-detail, exam-questions-review</td></tr>
+          <tr><td>Examiner</td><td>exam-day-list, batch-reports, stats</td></tr>
+          <tr><td>Mentor</td><td>exam-list, stats</td></tr>
+          <tr><td>Admin</td><td>stats/counts, notification-logs</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">10 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 11 — REPORTS SCREENSHOTS ══ -->
+<div class="slide" id="slide11">
+  <div class="slide-inner">
+    <h2>Exam Reports Service — Screenshots</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Student Exam Summary</h3>
+          <img src="images/img06_student_summary.png" class="screenshot" alt="Student Summary">
+          <div class="screenshot-label">Fig: Paginated Exam Summary for Student</div>
+        </div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Question Review with Subject Filter</h3>
+          <img src="images/img08_question_review.png" class="screenshot" alt="Question Review">
+          <div class="screenshot-label">Fig: Question-by-Question Review with Correct Solutions</div>
+        </div>
+      </div>
+      <div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Student Exam Detail</h3>
+          <img src="images/img07_student_detail.png" class="screenshot" alt="Student Detail">
+          <div class="screenshot-label">Fig: Detailed Exam Analysis with Subject Breakdown</div>
+        </div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Examiner Batch Reports</h3>
+          <img src="images/img09_batch_reports.png" class="screenshot" alt="Batch Reports">
+          <div class="screenshot-label">Fig: Batch Reports with Search & Sort</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">11 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 12 — MODULE 3: PARENT REPORTS ══ -->
+<div class="slide" id="slide12">
+  <div class="slide-inner">
+    <h2>Module 3: Parent Reports Service</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <h3>Processing Pipeline</h3>
+        <div class="flow-step"><div class="flow-num" style="background:#EA580C;">1</div><div class="flow-text">Data Aggregation (Attendance + Exams + Placements)</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num" style="background:#EA580C;">2</div><div class="flow-text">PDF Generation (ReportLab components)</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num" style="background:#EA580C;">3</div><div class="flow-text">AWS S3 Upload → Public URL</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num" style="background:#EA580C;">4</div><div class="flow-text">WhatsApp Distribution (ChatRace API)</div></div>
+        <div class="flow-connector"></div>
+        <div class="flow-step"><div class="flow-num" style="background:#EA580C;">5</div><div class="flow-text">Webhook Delivery Tracking</div></div>
+        <h3 style="margin-top:14px;">Three Processing Scenarios</h3>
+        <table style="font-size:0.8em;">
+          <tr><th>Scenario</th><th>Input</th><th>Scope</th></tr>
+          <tr><td>Specific Batch</td><td>location + batch</td><td>Single batch</td></tr>
+          <tr><td>Location-wide</td><td>location only</td><td>All batches in location</td></tr>
+          <tr><td>All Locations</td><td>No filters</td><td>All active batches</td></tr>
+        </table>
+        <h3 style="margin-top:14px;">API Endpoints (6)</h3>
+        <table style="font-size:0.78em;">
+          <tr><th>Method</th><th>Endpoint</th><th>Auth</th></tr>
+          <tr><td>POST</td><td>/api/reports/process</td><td>Admin</td></tr>
+          <tr><td>GET</td><td>/api/reports/status</td><td>Admin</td></tr>
+          <tr><td>GET</td><td>/api/reports/list</td><td>Admin</td></tr>
+          <tr><td>POST</td><td>/api/whatsapp/process</td><td>Admin</td></tr>
+          <tr><td>GET</td><td>/api/whatsapp/status</td><td>Admin</td></tr>
+          <tr><td>POST</td><td>/api/whatsapp/webhook</td><td>Public</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Celery Async Architecture</h3>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#FFF7ED; border-color:#EA580C;">
+          <div class="arch-title" style="font-size:0.84em;">Flask API → Queue Task</div>
+        </div>
+        <div class="arch-arrow">▼</div>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#FEF2F2; border-color:#DC2626;">
+          <div class="arch-title" style="font-size:0.84em;">Redis (Message Broker)</div>
+        </div>
+        <div class="arch-arrow">▼</div>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#F0FDF4; border-color:#16A34A;">
+          <div class="arch-title" style="font-size:0.84em;">Celery Worker → Process Batch</div>
+        </div>
+        <div class="arch-arrow">▼</div>
+        <div class="arch-box" style="padding:8px; margin:5px 0; background:#EFF6FF; border-color:var(--accent);">
+          <div class="arch-title" style="font-size:0.84em;">Update Status → Check Completion</div>
+        </div>
+        <h3 style="margin-top:14px;">Hierarchical Status Tracking</h3>
+        <div class="code-block" style="font-size:0.75em; line-height:1.8; padding:12px 16px;">
+📄 <span class="str">Document Level</span> (overall)
+ └── 📍 <span class="str">Location Level</span> (per city)
+      └── 📦 <span class="str">Batch Level</span> (per batch)
+           └── 👤 <span class="str">Student Level</span> (per student)
+<span class="cm">Status propagates bottom-up automatically</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">12 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 13 — PARENT REPORTS SCREENSHOTS ══ -->
+<div class="slide" id="slide13">
+  <div class="slide-inner">
+    <h2>Parent Reports Service — Screenshots</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Process Reports — Sync Response</h3>
+          <img src="images/img11_reports_sync.png" class="screenshot" alt="Reports Sync">
+          <div class="screenshot-label">Fig: Synchronous Report Processing Response</div>
+        </div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Report Status — Document Level</h3>
+          <img src="images/img13_report_status.png" class="screenshot" alt="Report Status">
+          <div class="screenshot-label">Fig: Hierarchical Status Tracking</div>
+        </div>
+      </div>
+      <div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Process Reports — Async (Celery)</h3>
+          <img src="images/img12_reports_async.png" class="screenshot" alt="Reports Async">
+          <div class="screenshot-label">Fig: Celery Async Processing Response</div>
+        </div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Generated PDF Report Sample</h3>
+          <img src="images/img14_sample_pdf.png" class="screenshot" alt="Sample PDF">
+          <div class="screenshot-label">Fig: Student Performance PDF Report</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">13 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 14 — DATABASE DESIGN ══ -->
+<div class="slide" id="slide14">
+  <div class="slide-inner">
+    <h2>Database Design</h2>
+    <div class="three-col" style="gap:14px; margin-bottom:16px;">
+      <div class="card" style="padding:14px;">
+        <h3 style="font-size:0.88em;">Exam Examiner (7 Collections)</h3>
+        <ul style="font-size:0.78em;">
+          <li>Daily-Exam <span class="tag" style="font-size:0.65em; padding:1px 5px;">R/W</span></li>
+          <li>Weekly-Exam <span class="tag" style="font-size:0.65em; padding:1px 5px;">R/W</span></li>
+          <li>notification_logs <span class="tag" style="font-size:0.65em; padding:1px 5px;">R/W</span></li>
+          <li>enums, student_login_details, Batches, window_configs</li>
+        </ul>
+      </div>
+      <div class="card green" style="padding:14px;">
+        <h3 style="font-size:0.88em; color:#16A34A;">Exam Reports (8 Collections)</h3>
+        <ul style="font-size:0.78em;">
+          <li>Daily/Weekly/Monthly-Exam</li>
+          <li>enums, {subject}_mcq, {subject}_code, {subject}_query</li>
+          <li>notification_logs</li>
+        </ul>
+        <div><span class="tag green" style="font-size:0.65em; padding:1px 5px;">All Read-Only (CQRS)</span></div>
+      </div>
+      <div class="card orange" style="padding:14px;">
+        <h3 style="font-size:0.88em; color:#EA580C;">Parent Reports (7 Collections)</h3>
+        <ul style="font-size:0.78em;">
+          <li>parent_whatsapp_report <span class="tag" style="font-size:0.65em; padding:1px 5px;">R/W</span></li>
+          <li>student_login_details, Batches, Attendance</li>
+          <li>Daily-Exam-v3, jobs_listing, Manager</li>
+        </ul>
+      </div>
+    </div>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <h3 style="font-size:0.9em;">Exam Document Schema</h3>
+        <div class="code-block" style="font-size:0.7em; line-height:1.6;">
+{
+  <span class="str">"_id"</span>: ObjectId,
+  <span class="str">"examDate"</span>: <span class="str">"2025-01-15"</span>,
+  <span class="str">"examName"</span>: <span class="str">"Daily-Exam-78"</span>,
+  <span class="str">"location"</span>: <span class="kw">1</span>, <span class="str">"batch"</span>: <span class="str">"PFS-TD-888"</span>,
+  <span class="str">"subjects"</span>: [{ <span class="str">"subject"</span>: <span class="kw">5</span>,
+    <span class="str">"tags"</span>: [<span class="str">"Day-8:1"</span>],
+    <span class="str">"selectedMCQs"</span>: {<span class="str">"1"</span>: <span class="kw">5</span>} }],
+  <span class="str">"students"</span>: [{ <span class="str">"studentId"</span>: <span class="str">"STU001"</span>,
+    <span class="str">"score"</span>: <span class="kw">0</span>,
+    <span class="str">"submitStatus"</span>: <span class="str">"not_attempted"</span> }]
+}
+        </div>
+      </div>
+      <div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">MongoDB — Exam Document</h3>
+          <img src="images/img15_mongo_exam.png" class="screenshot" alt="MongoDB Exam">
+          <div class="screenshot-label">Fig: Exam Document in MongoDB</div>
+        </div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">MongoDB — Parent Report Tracking</h3>
+          <img src="images/img16_mongo_report.png" class="screenshot" alt="MongoDB Report">
+          <div class="screenshot-label">Fig: Parent Report Tracking Document</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">14 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 15 — VALIDATION & SECURITY ══ -->
+<div class="slide" id="slide15">
+  <div class="slide-inner">
+    <h2>Validation Pipeline & Security</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <h3>3-Layer Validation (All Services)</h3>
+        <div class="card" style="margin-bottom:8px; padding:14px;">
+          <h3 style="font-size:0.85em;">Layer 1 — Pydantic Schema</h3>
+          <ul style="font-size:0.8em;"><li>Field types, formats, constraints, enum validation</li></ul>
+        </div>
+        <div class="card green" style="margin-bottom:8px; padding:14px;">
+          <h3 style="font-size:0.85em; color:#16A34A;">Layer 2 — Business Logic</h3>
+          <ul style="font-size:0.8em;"><li>Max 60 min, Mon–Sat only, duplicate prevention, stale detection</li></ul>
+        </div>
+        <div class="card orange" style="padding:14px;">
+          <h3 style="font-size:0.85em; color:#EA580C;">Layer 3 — MongoDB Schema</h3>
+          <ul style="font-size:0.8em;"><li>Document structure, 11 required fields, type safety</li></ul>
+        </div>
+        <h3 style="margin-top:14px;">Standardized Error Format</h3>
+        <div class="code-block" style="font-size:0.72em; padding:10px 14px;">
+{
+  <span class="str">"success"</span>: <span class="kw">false</span>,
+  <span class="str">"error"</span>: {
+    <span class="str">"code"</span>: <span class="str">"VALIDATION_ERROR"</span>,
+    <span class="str">"message"</span>: <span class="str">"Descriptive message"</span>
+  }
+}
+        </div>
+      </div>
+      <div>
+        <div class="card purple" style="margin-bottom:14px; padding:14px;">
+          <h3 style="color:#9333EA; font-size:0.88em;">JWT Authentication & RBAC</h3>
+          <ul style="font-size:0.8em;">
+            <li><code style="background:#F5F3FF; padding:1px 5px; border-radius:3px; font-size:0.88em;">@student_required</code> — Student-only endpoints</li>
+            <li><code style="background:#F5F3FF; padding:1px 5px; border-radius:3px; font-size:0.88em;">@manager_required</code> — Examiner endpoints</li>
+            <li><code style="background:#F5F3FF; padding:1px 5px; border-radius:3px; font-size:0.88em;">@mentor_required</code> — Mentor endpoints</li>
+            <li><code style="background:#F5F3FF; padding:1px 5px; border-radius:3px; font-size:0.88em;">@admin_required</code> — Admin endpoints</li>
+          </ul>
+        </div>
+        <div class="ss-block">
+          <h3 style="font-size:0.9em;">Role-Based Access Denied</h3>
+          <img src="images/img10_access_denied.png" class="screenshot" alt="Access Denied">
+          <div class="screenshot-label">Fig: Student accessing Examiner endpoint → 403 Forbidden</div>
+        </div>
+        <h3 style="margin-top:10px;">HTTP Status Codes</h3>
+        <table style="font-size:0.76em;">
+          <tr><th>Code</th><th>Meaning</th></tr>
+          <tr><td>200/201</td><td>Success / Created</td></tr>
+          <tr><td>400</td><td>Validation error</td></tr>
+          <tr><td>401/403</td><td>Auth failure / Forbidden</td></tr>
+          <tr><td>404/406</td><td>Not found / Invalid type</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">15 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 16 — TESTING ══ -->
+<div class="slide" id="slide16">
+  <div class="slide-inner">
+    <h2>Testing & Quality Assurance</h2>
+    <div class="two-col" style="gap:24px;">
+      <div>
+        <h3>Test Summary — 30 Test Cases</h3>
+        <table style="font-size:0.84em; margin-bottom:14px;">
+          <tr><th>Service</th><th style="text-align:center;">Cases</th><th style="text-align:center;">Status</th></tr>
+          <tr><td>Exam Examiner</td><td style="text-align:center;">10</td><td style="text-align:center; color:#16A34A; font-weight:600;">✅ All Pass</td></tr>
+          <tr><td>Exam Reports</td><td style="text-align:center;">10</td><td style="text-align:center; color:#16A34A; font-weight:600;">✅ All Pass</td></tr>
+          <tr><td>Parent Reports</td><td style="text-align:center;">10</td><td style="text-align:center; color:#16A34A; font-weight:600;">✅ All Pass</td></tr>
+        </table>
+        <div class="card" style="padding:12px; margin-bottom:8px;">
+          <h3 style="font-size:0.85em; color:#16A34A;">✅ Happy Path</h3>
+          <ul style="font-size:0.78em;"><li>Valid exam generation → 201</li><li>Student summary → 200</li><li>PDF + S3 upload → 200</li></ul>
+        </div>
+        <div class="card red" style="padding:12px; margin-bottom:8px;">
+          <h3 style="font-size:0.85em; color:#DC2626;">❌ Validation Failures</h3>
+          <ul style="font-size:0.78em;"><li>Invalid exam type → 406</li><li>Sunday exam → 400</li><li>Exceeding time → 400</li></ul>
+        </div>
+        <div class="card purple" style="padding:12px;">
+          <h3 style="font-size:0.85em; color:#9333EA;">🔒 Security Tests</h3>
+          <ul style="font-size:0.78em;"><li>Missing JWT → 401</li><li>Wrong role → 403</li><li>Concurrent processing → 400</li></ul>
+        </div>
+      </div>
+      <div>
+        <div class="card" style="padding:12px; margin-bottom:8px;">
+          <h3 style="font-size:0.85em;">Unit Testing</h3>
+          <ul style="font-size:0.78em;">
+            <li>Pydantic schema validation (accept/reject)</li>
+            <li>Enum conversion and caching logic</li>
+            <li>Document factory structure verification</li>
+            <li>Phone number validation (E164 format)</li>
+          </ul>
+        </div>
+        <div class="card green" style="padding:12px; margin-bottom:8px;">
+          <h3 style="font-size:0.85em; color:#16A34A;">Integration Testing</h3>
+          <ul style="font-size:0.78em;">
+            <li>MongoDB connection pooling and queries</li>
+            <li>Aggregation pipeline correctness</li>
+            <li>WhatsApp API integration (ChatRace)</li>
+            <li>AWS S3 upload and URL generation</li>
+          </ul>
+        </div>
+        <div class="card gold" style="padding:12px;">
+          <h3 style="font-size:0.85em; color:#92400E;">End-to-End Testing</h3>
+          <ul style="font-size:0.78em;">
+            <li>Exam generation → Notification → Webhook</li>
+            <li>PDF generation → S3 → WhatsApp → Tracking</li>
+            <li>Student summary → Detail → Question review</li>
+            <li>JWT auth flow across all endpoints</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">16 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 17 — RESULTS ══ -->
+<div class="slide" id="slide17">
+  <div class="slide-inner">
+    <h2>Results & Outcomes</h2>
+    <div class="metric-grid" style="margin-bottom:18px;">
+      <div class="metric"><div class="value">3</div><div class="label">Independent Microservices</div></div>
+      <div class="metric"><div class="value">20</div><div class="label">Focused API Endpoints</div></div>
+      <div class="metric"><div class="value">4</div><div class="label">User Roles Supported</div></div>
+      <div class="metric"><div class="value">500+</div><div class="label">Concurrent Notifications</div></div>
+      <div class="metric"><div class="value">30</div><div class="label">Test Cases — All Pass</div></div>
+      <div class="metric"><div class="value">0</div><div class="label">Downtime During Migration</div></div>
+    </div>
+    <h3>Monolith vs Microservices</h3>
+    <table style="font-size:0.84em;">
+      <tr><th style="width:28%;">Metric</th><th style="width:36%;">Monolith (Before)</th><th>Microservices (After)</th></tr>
+      <tr><td><strong>Deployment</strong></td><td>1 (entire application)</td><td style="color:#16A34A; font-weight:600;">3 independent services</td></tr>
+      <tr><td><strong>Dependencies</strong></td><td>90+ packages</td><td style="color:#16A34A; font-weight:600;">9–15 per service</td></tr>
+      <tr><td><strong>Fault Isolation</strong></td><td>None (single process)</td><td style="color:#16A34A; font-weight:600;">Complete per-service</td></tr>
+      <tr><td><strong>Scaling</strong></td><td>Uniform (entire app)</td><td style="color:#16A34A; font-weight:600;">Targeted per-service</td></tr>
+      <tr><td><strong>Startup</strong></td><td>All 80+ modules loaded</td><td style="color:#16A34A; font-weight:600;">Only relevant modules</td></tr>
+    </table>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">17 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 18 — FUTURE & LESSONS ══ -->
+<div class="slide" id="slide18">
+  <div class="slide-inner">
+    <h2>Future Enhancements & Lessons Learnt</h2>
+    <div class="two-col" style="gap:24px;">
+      <div class="card" style="padding:16px;">
+        <h3>🚀 Future Enhancements</h3>
+        <ul>
+          <li><strong>API Gateway</strong> — Kong / AWS API Gateway for single entry point</li>
+          <li><strong>Database-per-Service</strong> — Complete data isolation</li>
+          <li><strong>Kubernetes</strong> — Container orchestration and auto-scaling</li>
+          <li><strong>CI/CD Pipeline</strong> — GitHub Actions / AWS CodePipeline</li>
+          <li><strong>Distributed Tracing</strong> — OpenTelemetry for monitoring</li>
+          <li><strong>Event-Driven Architecture</strong> — RabbitMQ / AWS SQS</li>
+          <li><strong>Analytics Dashboard</strong> — Prometheus + Grafana</li>
+          <li><strong>Blue-Green Deployment</strong> — Zero-downtime updates</li>
+        </ul>
+      </div>
+      <div class="card gold" style="padding:16px;">
+        <h3 style="color:#92400E;">📚 Key Lessons Learnt</h3>
+        <ul>
+          <li><strong>Strangler Fig</strong> enables zero-downtime migration — commenting out monolith routes after deployment</li>
+          <li><strong>Layered architecture</strong> made codebase significantly easier to understand vs monolith's flat structure</li>
+          <li><strong>Pydantic validation</strong> at API boundary catches most invalid inputs before business logic</li>
+          <li><strong>Redis caching</strong> for enum mappings dramatically improved response times</li>
+          <li><strong>Celery + Redis</strong> provided robust async processing for PDF generation</li>
+          <li><strong>CQRS pattern</strong> simplified the Reports Service by focusing only on read operations</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:16px; text-align:center;">
+      <div style="display:inline-flex; align-items:center; gap:10px; background:var(--bg-light); padding:10px 20px; border-radius:8px; border:1px solid var(--border);">
+        <span style="font-size:0.85em; color:var(--text-secondary);">
+          <strong>Limitations:</strong> Shared MongoDB cluster | 3 of 15+ modules migrated | No API Gateway | No CI/CD | No load testing
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">18 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 19 — COMPLETION CERTIFICATE ══ -->
+<div class="slide" id="slide19">
+  <div class="slide-inner" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+    <h2 style="margin-bottom:18px;">Project Completion Certificate</h2>
+    <div style="max-width:660px; width:100%; background:#fff; border:2px solid var(--srm-blue); border-radius:12px; padding:36px 40px; box-shadow:0 8px 32px rgba(0,0,0,0.1); position:relative;">
+      <div style="position:absolute; top:0; left:0; width:36px; height:36px; border-top:3px solid var(--srm-gold); border-left:3px solid var(--srm-gold); border-radius:12px 0 0 0;"></div>
+      <div style="position:absolute; top:0; right:0; width:36px; height:36px; border-top:3px solid var(--srm-gold); border-right:3px solid var(--srm-gold); border-radius:0 12px 0 0;"></div>
+      <div style="position:absolute; bottom:0; left:0; width:36px; height:36px; border-bottom:3px solid var(--srm-gold); border-left:3px solid var(--srm-gold); border-radius:0 0 0 12px;"></div>
+      <div style="position:absolute; bottom:0; right:0; width:36px; height:36px; border-bottom:3px solid var(--srm-gold); border-right:3px solid var(--srm-gold); border-radius:0 0 12px 0;"></div>
+      <div style="text-align:center; margin-bottom:18px;">
+        <div style="font-size:1.2em; font-weight:800; color:var(--srm-blue); letter-spacing:1px;">CODEGNAN IT SOLUTIONS PVT LTD</div>
+        <div style="font-size:0.82em; color:var(--text-muted); margin-top:3px;">To Whomsoever It May Concern</div>
+        <div style="width:50px; height:2px; background:var(--srm-gold); margin:10px auto;"></div>
+      </div>
+      <div style="line-height:1.85; font-size:0.88em; color:var(--text-secondary); text-align:justify;">
+        This is to certify that <strong style="color:var(--text-primary);">Mr. Jasti Kesava Datta</strong>,
+        bearing Register Number: <strong style="color:var(--text-primary);">RA2432014010026</strong>,
+        is a student of II Year, M.Sc. Applied Data Science, SRM Institute of Science and Technology, Kattankulathur.
+        <br><br>
+        The student worked with our organization as a
+        <strong style="color:var(--accent);">Software Developer (Project Trainee)</strong>
+        and contributed to the design, development, and enhancement of functional LMS modules titled:
+        <br><br>
+        <em style="color:var(--srm-blue); font-weight:600;">"Design and Development of Functional Modules for a Learning Management System"</em>
+        <br><br>
+        The project work was carried out during <strong style="color:var(--text-primary);">December 2025 to March 2026</strong>.
+      </div>
+      <div style="margin-top:24px; display:flex; justify-content:flex-end;">
+        <div style="text-align:center;">
+          <div style="width:150px; border-top:1.5px solid var(--text-muted); padding-top:6px;">
+            <strong style="font-size:0.85em; color:var(--text-primary);">Authorized Signatory</strong><br>
+            <span style="font-size:0.75em; color:var(--text-muted);">Codegnan IT Solutions Pvt Ltd</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot-bar"><span class="foot-left">Jasti Kesava Datta | RA2432014010026 | M.Sc. Applied Data Science</span><span class="foot-right">19 / 20</span></div>
+</div>
+
+<!-- ══ SLIDE 20 — THANK YOU ══ -->
+<div class="slide thank-slide" id="slide20">
+  <!-- Decorative background circles -->
+  <div class="deco-circle" style="width:500px;height:500px;background:var(--srm-gold);top:-150px;right:-100px;position:absolute;"></div>
+  <div class="deco-circle" style="width:350px;height:350px;background:var(--srm-blue);bottom:-100px;left:-80px;position:absolute;"></div>
+  <div class="deco-circle" style="width:200px;height:200px;background:var(--accent);bottom:80px;right:60px;position:absolute;opacity:0.04;"></div>
+
+  <div class="slide-inner" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/SRM_Institute_of_Science_and_Technology_Logo.svg/1280px-SRM_Institute_of_Science_and_Technology_Logo.svg.png" alt="SRM Logo" style="width:110px; margin-bottom:18px; opacity:0.85;">
+
+    <h1>Thank You</h1>
+    <div class="ty-divider"></div>
+
+    <div class="name">JASTI KESAVA DATTA</div>
+    <div class="info" style="margin-top:8px;">Reg. No: <strong style="color:var(--text-primary);">RA2432014010026</strong></div>
+    <div class="info">M.Sc. Applied Data Science (2024–2026)</div>
+    <div class="info" style="font-size:0.82em; margin-top:2px; color:var(--text-muted);">SRM Institute of Science and Technology, Kattankulathur</div>
+
+    <div style="margin-top:22px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+      <span class="tag">Guide: Dr. P. Chanthini</span>
+      <span class="tag gold">Dept. of Computer Applications</span>
+      <span class="tag green">April 2026</span>
+    </div>
+
+    <div class="ty-quote">"Questions and feedback are welcome"</div>
+  </div>
+
+  <div class="slide-foot-bar" style="background:#F8F6F0; border-top-color:#E8E4D9;">
+    <span class="foot-left" style="color:var(--text-muted);">Jasti Kesava Datta | RA2432014010026</span>
+    <span class="foot-right" style="color:var(--text-muted);">20 / 20</span>
+  </div>
+</div>
+
+<!-- ══ SLIDE PANEL (sidebar) ══ -->
+<div class="slide-panel-overlay" id="panelOverlay" onclick="togglePanel()"></div>
+<div class="slide-panel" id="slidePanel">
+  <div class="slide-panel-header">
+    <span>📑 ALL SLIDES</span>
+    <button class="slide-panel-close" onclick="togglePanel()">✕</button>
+  </div>
+  <div class="slide-panel-list" id="panelList"></div>
+</div>
+
+<!-- ══ NAVIGATION BAR ══ -->
+<div class="nav pos-bottom" id="navBar">
+  <button class="nav-btn" onclick="togglePanel()" title="Slide List">☰</button>
+  <div class="sep"></div>
+  <button class="prev" onclick="changeSlide(-1)">← Prev</button>
+  <span class="counter" id="slideCounter">1 / 20</span>
+  <button class="next" onclick="changeSlide(1)">Next →</button>
+  <div class="sep"></div>
+  <button class="nav-btn" onclick="cycleNavPos()" title="Move / Hide Nav">⇅</button>
+</div>
+
+<!-- ══ FLOATING SHOW BUTTON (when nav hidden) ══ -->
+<button class="show-nav-btn" id="showNavBtn" onclick="cycleNavPos()" title="Show Navigation">▲</button>
+
+<script>
+const SLIDE_TITLES = [
+  'Title Slide','Abstract','Problem & Objectives','Scope of the Project',
+  'Technology Stack','System Architecture','Layered Architecture & Patterns',
+  'Module 1: Exam Examiner','Examiner — Screenshots','Module 2: Exam Reports (CQRS)',
+  'Reports — Screenshots','Module 3: Parent Reports','Parent Reports — Screenshots',
+  'Database Design','Validation & Security','Testing & QA',
+  'Results & Outcomes','Future & Lessons','Completion Certificate','Thank You'
+];
+
+let current = 1;
+const total = 20;
+let navPos = 0; // 0=bottom, 1=top, 2=hidden
+
+// ── Build slide panel list ──
+function buildPanel() {
+  const list = document.getElementById('panelList');
+  list.innerHTML = '';
+  for (let i = 1; i <= total; i++) {
+    const item = document.createElement('div');
+    item.className = 'slide-panel-item' + (i === current ? ' active' : '');
+    item.id = 'sp-item-' + i;
+    item.innerHTML = '<div class="sp-num">' + i + '</div><div class="sp-title">' + SLIDE_TITLES[i-1] + '</div>';
+    item.onclick = () => goToSlide(i);
+    list.appendChild(item);
+  }
+}
+
+function updatePanelActive() {
+  for (let i = 1; i <= total; i++) {
+    const el = document.getElementById('sp-item-' + i);
+    if (el) el.className = 'slide-panel-item' + (i === current ? ' active' : '');
+  }
+  // scroll active into view
+  const active = document.getElementById('sp-item-' + current);
+  if (active) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+// ── Slide navigation ──
+function goToSlide(n) {
+  if (n < 1 || n > total || n === current) return;
+  document.getElementById('slide' + current).classList.remove('active');
+  current = n;
+  const el = document.getElementById('slide' + current);
+  el.classList.add('active');
+  const inner = el.querySelector('.slide-inner');
+  if (inner) inner.scrollTop = 0;
+  document.getElementById('slideCounter').textContent = current + ' / ' + total;
+  updatePanelActive();
+}
+
+function changeSlide(dir) {
+  goToSlide(current + dir);
+}
+
+// ── Panel toggle ──
+function togglePanel() {
+  document.getElementById('slidePanel').classList.toggle('open');
+  document.getElementById('panelOverlay').classList.toggle('open');
+}
+
+// ── Nav position cycle: bottom → top → hidden → bottom ──
+function cycleNavPos() {
+  const nav = document.getElementById('navBar');
+  const btn = document.getElementById('showNavBtn');
+  navPos = (navPos + 1) % 3;
+  nav.classList.remove('pos-bottom','pos-top','pos-hidden');
+  if (navPos === 0) { nav.classList.add('pos-bottom'); btn.classList.remove('visible'); }
+  else if (navPos === 1) { nav.classList.add('pos-top'); btn.classList.remove('visible'); }
+  else { nav.classList.add('pos-hidden'); btn.classList.add('visible'); }
+}
+
+// ── Keyboard ──
+document.addEventListener('keydown', (e) => {
+  // Don't capture if panel is open and user is scrolling
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); changeSlide(1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); changeSlide(-1); }
+  if (e.key === 'Home') { e.preventDefault(); goToSlide(1); }
+  if (e.key === 'End') { e.preventDefault(); goToSlide(total); }
+  if (e.key === 'Escape') {
+    const panel = document.getElementById('slidePanel');
+    if (panel.classList.contains('open')) togglePanel();
+  }
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+  if (e.key === 'h' || e.key === 'H') { cycleNavPos(); }
+  if (e.key === 's' || e.key === 'S') { togglePanel(); }
+});
+
+// ── Init ──
+buildPanel();
+</script>
+</body>
+</html>
